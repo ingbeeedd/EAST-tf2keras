@@ -250,7 +250,8 @@ def main(argv=None):
                                  rbox_loss(east.overly_small_text_region_training_mask, east.text_region_boundary_training_mask, small_text_weight, east.target_score_map)],
                            loss_weights=[1., 1.],
                            optimizer=opt)
-    #east.model.summary()
+
+    # print(east.model.summary(line_length=150))
 
     model_json = east.model.to_json()
     with open(FLAGS.checkpoint_path + '/model.json', 'w') as json_file:

@@ -11,7 +11,7 @@ import locality_aware_nms as nms_locality
 import lanms
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--test_data_path', type=str, default='../data/ICDAR2015/test_data')
+parser.add_argument('--test_data_path', type=str, default='./data/ICDAR2013+2015/test_data')
 parser.add_argument('--gpu_list', type=str, default='0')
 parser.add_argument('--model_path', type=str, default='')
 parser.add_argument('--output_dir', type=str, default='tmp/eval/east_icdar2015_resnet_v1_50_rbox/')
@@ -19,6 +19,7 @@ FLAGS = parser.parse_args()
 
 from model import *
 from losses import *
+import data_processor
 from data_processor import restore_rectangle
 
 def get_images():
@@ -138,13 +139,14 @@ def main(argv=None):
     json_file.close()
     model = model_from_json(loaded_model_json, custom_objects={'tf': tf, 'RESIZE_FACTOR': RESIZE_FACTOR})
     model.load_weights(FLAGS.model_path)
-
+    
     img_list = get_images()
     for img_file in img_list:
         img = cv2.imread(img_file)[:, :, ::-1]
         start_time = time.time()
         img_resized, (ratio_h, ratio_w) = resize_image(img)
 
+        # normalize
         img_resized = (img_resized / 127.5) - 1
 
         timer = {'net': 0, 'restore': 0, 'nms': 0}
@@ -183,7 +185,7 @@ def main(argv=None):
                     f.write('{},{},{},{},{},{},{},{}\r\n'.format(
                         box[0, 0], box[0, 1], box[1, 0], box[1, 1], box[2, 0], box[2, 1], box[3, 0], box[3, 1],
                     ))
-                    cv2.polylines(img[:, :, ::-1], [box.astype(np.int32).reshape((-1, 1, 2))], True, color=(255, 255, 0), thickness=1)
+                    cv2.polylines(img[:, :, ::-1], [box.astype(np.int32).reshape((-1, 1, 2))], True, color=(0, 0, 255), thickness=2)
 
         img_path = os.path.join(FLAGS.output_dir, os.path.basename(img_file))
         cv2.imwrite(img_path, img[:, :, ::-1])

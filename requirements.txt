@@ -1,0 +1,9 @@
+opencv_python==4.5.2.54
+matplotlib==3.4.2
+numpy==1.19.5
+keras_adamw==1.38
+tensorflow_gpu==2.4.1
+Shapely==1.7.1
+scipy==1.7.0
+Pillow==8.3.1
+plumbum==1.7.0

@@ -68,6 +68,7 @@ class EAST_model:
         pred_geo_map = concatenate([rbox_geo_map, angle_map], axis=3, name='pred_geo_map')
 
         model = Model(inputs=[input_image, overly_small_text_region_training_mask, text_region_boundary_training_mask, target_score_map], outputs=[pred_score_map, pred_geo_map])
+        # model = Model(inputs=input_image, outputs=[pred_score_map, pred_geo_map])
 
         self.model = model
         self.input_image = input_image
